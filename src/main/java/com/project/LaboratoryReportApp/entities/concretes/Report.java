@@ -49,8 +49,8 @@ public class Report implements IEntity{
 	@Column(name="report_date")
 	private Date reportDate;
 	
-	@Column(name="image")
-	private byte[] image;
+	//@Column(name="image")
+	//private byte[] image;
 	
 	@ManyToOne
 	@JoinColumn(name="laborant_id")

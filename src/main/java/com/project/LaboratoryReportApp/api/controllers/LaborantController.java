@@ -3,14 +3,20 @@ package com.project.LaboratoryReportApp.api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.LaboratoryReportApp.business.abstracts.LaborantService;
-import com.project.LaboratoryReportApp.entities.concretes.Laborant;
+import com.project.LaboratoryReportApp.business.requests.CreateLaborantRequest;
+import com.project.LaboratoryReportApp.business.requests.UpdateLaborantRequest;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
+import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 
 @RestController
 @RequestMapping("/api/laborants")
@@ -25,27 +31,27 @@ public class LaborantController {
 	}
 	
 	@GetMapping("/getAll")
-	public List<Laborant> getAll() {
+	public List<GetAllLaborantsResponse> getAll() {
 		return laborantService.getAll();
 	}
 	
 	@GetMapping("/getById/{laborantId}")
-	public Laborant getById(@PathVariable("laborantId") int laborantId) {
+	public GetByIdLaborantResponse getById(@PathVariable("laborantId") int laborantId) {
 		return laborantService.getById(laborantId);
 	}
 	
 	@PostMapping("/add")
-	public Laborant add(Laborant laborant) {
+	public CreateLaborantRequest add(@RequestBody CreateLaborantRequest laborant) {
 		return laborantService.add(laborant);
 	}
 	
-	@PostMapping("/delete")
+	@DeleteMapping("/delete")
 	public void delete(int laborantId) {
 		laborantService.delete(laborantId);
 	}
 	
-	@PostMapping("/update")
-	public Laborant update(Laborant laborant) {
+	@PutMapping("/update")
+	public UpdateLaborantRequest update(@RequestBody UpdateLaborantRequest laborant) {
 		return laborantService.update(laborant);
 	}
 	
