@@ -32,6 +32,9 @@ public class Laborant implements IEntity{
 	@Column(name="laborant_surname")
 	private String laborantSurname;
 	
+	@Column(name="laborant_identity_number")
+	private String laborantIdentityNumber;
+	
 	@Column(name="hospital_identity_number")
 	private String hospitalIdentityNumber;
 	

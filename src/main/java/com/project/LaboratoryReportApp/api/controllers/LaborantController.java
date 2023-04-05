@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.LaboratoryReportApp.business.abstracts.LaborantService;
 import com.project.LaboratoryReportApp.business.requests.CreateLaborantRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateLaborantRequest;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByHospitalIdentityNumberResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdentityNumberResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 
@@ -38,6 +41,21 @@ public class LaborantController {
 	@GetMapping("/getById/{laborantId}")
 	public GetByIdLaborantResponse getById(@PathVariable("laborantId") int laborantId) {
 		return laborantService.getById(laborantId);
+	}
+	
+	@GetMapping("/getByNameOrSurname/{name}/{surname}")
+	public List<GetAllLaborantsByNameOrSurnameResponse> getByNameOrSurname(@PathVariable("name") String name, @PathVariable("surname") String surname) {
+		return laborantService.getAllByNameOrSurname(name, surname);
+	}
+	
+	@GetMapping("/getByHostpitalIdentityNumber/{hospital_identity_number}")
+	public List<GetAllLaborantsByHospitalIdentityNumberResponse> getByHostpitalIdentityNumber(@PathVariable("hospital_identity_number") String hospitalIdentityNumber) {
+		return laborantService.getAllByHospitalIdentityNumber(hospitalIdentityNumber);
+	}
+	
+	@GetMapping("/getByLaborantIdentityNumber/{laborant_identity_number}")
+	public List<GetAllLaborantsByIdentityNumberResponse> getByLaborantIdentityNumber(@PathVariable("laborant_identity_number") String laborantIdentityNumber) {
+		return laborantService.getAllByLaborantIdentityNumber(laborantIdentityNumber);
 	}
 	
 	@PostMapping("/add")

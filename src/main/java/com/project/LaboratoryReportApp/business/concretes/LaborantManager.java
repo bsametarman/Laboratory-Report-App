@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.project.LaboratoryReportApp.business.abstracts.LaborantService;
 import com.project.LaboratoryReportApp.business.requests.CreateLaborantRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateLaborantRequest;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByHospitalIdentityNumberResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdentityNumberResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
@@ -60,6 +63,29 @@ public class LaborantManager implements LaborantService{
 		Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
 		this.laborantDao.save(laborant);
 		return laborantRequest;
+	}
+
+	@Override
+	public List<GetAllLaborantsByNameOrSurnameResponse> getAllByNameOrSurname(String name, String surname) {
+		List<Laborant> laborants = this.laborantDao.findAllByLaborantNameIgnoreCaseOrLaborantSurnameIgnoreCase(name, surname);
+		List<GetAllLaborantsByNameOrSurnameResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByNameOrSurnameResponse.class)).collect(Collectors.toList());
+		return laborantResponse;
+	}
+
+	@Override
+	public List<GetAllLaborantsByHospitalIdentityNumberResponse> getAllByHospitalIdentityNumber(
+			String hospitalIdentityNumber) {
+		List<Laborant> laborants = this.laborantDao.findAllByHospitalIdentityNumberIgnoreCase(hospitalIdentityNumber);
+		List<GetAllLaborantsByHospitalIdentityNumberResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByHospitalIdentityNumberResponse.class)).collect(Collectors.toList());
+		return laborantResponse;
+	}
+
+	@Override
+	public List<GetAllLaborantsByIdentityNumberResponse> getAllByLaborantIdentityNumber(
+			String laborantIdentityNumber) {
+		List<Laborant> laborants = this.laborantDao.findAllByLaborantIdentityNumberIgnoreCase(laborantIdentityNumber);
+		List<GetAllLaborantsByIdentityNumberResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByIdentityNumberResponse.class)).collect(Collectors.toList());
+		return laborantResponse;
 	}
 
 }
