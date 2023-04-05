@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import com.project.LaboratoryReportApp.business.abstracts.ReportService;
 import com.project.LaboratoryReportApp.business.requests.CreateReportRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateReportRequest;
+import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllReportsByPatientNameOrSurnameResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateAscResponse;
+import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateDescResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdReportResponse;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
@@ -59,6 +63,34 @@ public class ReportManager implements ReportService{
 		Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
 		this.reportDao.save(report);
 		return reportRequest;
+	}
+
+	@Override
+	public List<GetAllReportsByPatientNameOrSurnameResponse> getAllByPatientNameOrSurname(String patientName, String patientSurname) {
+		List<Report> reports = this.reportDao.findAllByPatientNameIgnoreCaseOrPatientSurnameIgnoreCase(patientName, patientSurname);
+		List<GetAllReportsByPatientNameOrSurnameResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsByPatientNameOrSurnameResponse.class)).collect(Collectors.toList());
+		return reportResponse;
+	}
+
+	@Override
+	public List<GetByPatientIdentityNumberReportResponse> getAllByPatientIdentityNumber(String identityNumber) {
+		List<Report> reports = this.reportDao.findAllByPatientIdentityNumberIgnoreCase(identityNumber);
+		List<GetByPatientIdentityNumberReportResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetByPatientIdentityNumberReportResponse.class)).collect(Collectors.toList());
+		return reportResponse;
+	}
+
+	@Override
+	public List<GetAllReportsReportDateDescResponse> getAllReportDateDesc() {
+		List<Report> reports = this.reportDao.findByOrderByReportDateDesc();
+		List<GetAllReportsReportDateDescResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateDescResponse.class)).collect(Collectors.toList());
+		return reportResponse;
+	}
+
+	@Override
+	public List<GetAllReportsReportDateAscResponse> getAllReportDateAsc() {
+		List<Report> reports = this.reportDao.findByOrderByReportDateAsc();
+		List<GetAllReportsReportDateAscResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateAscResponse.class)).collect(Collectors.toList());
+		return reportResponse;
 	}
 
 }
