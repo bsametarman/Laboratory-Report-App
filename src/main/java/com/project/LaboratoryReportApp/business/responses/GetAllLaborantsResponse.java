@@ -17,5 +17,5 @@ public class GetAllLaborantsResponse {
 	private String hospitalIdentityNumber;
 	private String address;
 	private String phoneNumber;
-	private List<GetAllReportsResponse> reports;
+	private List<GetAllReportsForLaborantResponse> reports;
 }

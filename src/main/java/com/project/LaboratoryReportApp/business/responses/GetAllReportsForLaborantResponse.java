@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAllReportsByLaborantNameOrSurnameResponse {
+public class GetAllReportsForLaborantResponse {
 	private int id;
 	private String fileNo;
 	private String patientName;
@@ -20,8 +20,4 @@ public class GetAllReportsByLaborantNameOrSurnameResponse {
 	private Date reportDate;
 	private String imageName;
 	private String imageType;
-	private String laborantName;
-	private String laborantSurname;
-	private String laborantAddress;
-	private byte[] imageData;
 }

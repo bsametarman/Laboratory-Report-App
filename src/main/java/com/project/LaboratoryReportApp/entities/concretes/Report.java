@@ -1,6 +1,7 @@
 package com.project.LaboratoryReportApp.entities.concretes;
 
 import java.util.Date;
+import java.util.List;
 
 import com.project.LaboratoryReportApp.entities.abstracts.IEntity;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,8 +51,8 @@ public class Report implements IEntity{
 	@Column(name="report_date")
 	private Date reportDate;
 	
-	//@Column(name="image")
-	//private byte[] image;
+	@OneToMany(mappedBy="report")
+	private List<Image> images;
 	
 	@ManyToOne
 	@JoinColumn(name="laborant_id")

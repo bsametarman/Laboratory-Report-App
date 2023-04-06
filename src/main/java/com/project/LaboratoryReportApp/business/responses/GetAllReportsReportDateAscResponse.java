@@ -18,8 +18,10 @@ public class GetAllReportsReportDateAscResponse {
 	private String diagnosticTitle;
 	private String diagnosticDetail;
 	private Date reportDate;
-	//private byte[] image;
+	private String imageName;
+	private String imageType;
 	private String laborantName;
 	private String laborantSurname;
 	private String laborantAddress;
+	private byte[] imageData;
 }
