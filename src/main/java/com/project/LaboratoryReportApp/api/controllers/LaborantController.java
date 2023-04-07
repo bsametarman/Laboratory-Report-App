@@ -3,6 +3,7 @@ package com.project.LaboratoryReportApp.api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameO
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/laborants")
 public class LaborantController {
