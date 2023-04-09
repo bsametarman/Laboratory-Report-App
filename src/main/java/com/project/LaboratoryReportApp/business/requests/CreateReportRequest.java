@@ -18,6 +18,5 @@ public class CreateReportRequest {
 	private String diagnosticTitle;
 	private String diagnosticDetail;
 	private Date reportDate;
-	private int imageId;
 	private int laborantId;
 }

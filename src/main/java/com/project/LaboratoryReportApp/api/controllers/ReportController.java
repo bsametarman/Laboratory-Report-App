@@ -70,8 +70,8 @@ public class ReportController {
 		return reportService.add(report);
 	}
 	
-	@DeleteMapping("/delete")
-	public void delete(int reportId) {
+	@DeleteMapping("/delete/{report_id}")
+	public void delete(@PathVariable("report_id") int reportId) {
 		reportService.delete(reportId);
 	}
 	
