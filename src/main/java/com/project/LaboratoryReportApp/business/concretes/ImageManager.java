@@ -44,15 +44,13 @@ public class ImageManager implements ImageService {
 	}
 
 	@Override
-	public Image add(MultipartFile image, int reportId) throws IOException {
+	public void add(MultipartFile image, int reportId) throws IOException {
 		String imageName = StringUtils.cleanPath(image.getOriginalFilename());
 	    Image imageToSave = new Image(imageName, image.getContentType(), image.getBytes());
 	    CreateImageRequest imageRequest = this.modelMapperService.forRequest().map(imageToSave, CreateImageRequest.class);
 	    imageRequest.setReportId(reportId);
 	    imageToSave = this.modelMapperService.forRequest().map(imageRequest, Image.class);
 	    this.imageDao.save(imageToSave);
-	    
-	    return imageToSave;
 	}
 
 	@Override

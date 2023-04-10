@@ -1,15 +1,18 @@
 package com.project.LaboratoryReportApp.api.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,12 +43,18 @@ public class ImageController {
 	}
 	
 	@PostMapping(value= "/add/{report_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void add(@RequestParam("image") MultipartFile image, @RequestParam("report_id") int reportId) {
+	public List<String> add(@RequestPart("images") MultipartFile[] images, @RequestParam("report_id") int reportId) {
+		List<String> imageNames = new ArrayList<>();
 	    try {
-	    	this.imageService.add(image, reportId);
+	    	for (MultipartFile image : images) {
+	    		this.imageService.add(image, reportId);
+	    		imageNames.add(StringUtils.cleanPath(image.getOriginalFilename()));
+			}
 	    } 
 	    catch (Exception e) {
 	    }
+	    
+	    return imageNames;
 	}
 	
 	@PostMapping("/delete/{image_id}")
