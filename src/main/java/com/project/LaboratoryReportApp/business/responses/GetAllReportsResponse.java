@@ -1,7 +1,6 @@
 package com.project.LaboratoryReportApp.business.responses;
 
 import java.util.Date;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +21,5 @@ public class GetAllReportsResponse {
 	private String laborantName;
 	private String laborantSurname;
 	private String laborantAddress;
-	private List<GetAllImagesResponse> images;
+	//private List<GetAllImagesResponse> images;
 }

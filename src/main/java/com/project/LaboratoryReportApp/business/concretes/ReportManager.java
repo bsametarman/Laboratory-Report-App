@@ -49,8 +49,10 @@ public class ReportManager implements ReportService{
 	@Override
 	public CreateReportRequest add(CreateReportRequest reportRequest) {
 		Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
-		this.reportDao.save(report);
-		return reportRequest;
+		Report savedReport = this.reportDao.save(report);
+		
+		CreateReportRequest savedReportRequest = this.modelMapperService.forRequest().map(savedReport, CreateReportRequest.class);
+		return savedReportRequest;
 	}
 
 	@Override
