@@ -11,6 +11,7 @@ public class UpdateLaborantRequest {
 	private int id;
 	private String laborantName;
 	private String laborantSurname;
+	private String laborantIdentityNumber;
 	private String hospitalIdentityNumber;
 	private String address;
 	private String phoneNumber;

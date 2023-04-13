@@ -13,7 +13,7 @@ public class GetAllLaborantsByIdentityNumberResponse {
 	private int id;
 	private String laborantName;
 	private String laborantSurname;
-	private String identityNumber;
+	private String laborantIdentityNumber;
 	private String hospitalIdentityNumber;
 	private String address;
 	private String phoneNumber;

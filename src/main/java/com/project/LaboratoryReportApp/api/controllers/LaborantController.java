@@ -65,8 +65,8 @@ public class LaborantController {
 		return laborantService.add(laborant);
 	}
 	
-	@DeleteMapping("/delete")
-	public void delete(int laborantId) {
+	@DeleteMapping("/delete/{laborant_id}")
+	public void delete(@PathVariable("laborant_id") int laborantId) {
 		laborantService.delete(laborantId);
 	}
 	
