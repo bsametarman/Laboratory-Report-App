@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 import com.project.LaboratoryReportApp.business.abstracts.ReportService;
 import com.project.LaboratoryReportApp.business.requests.CreateReportRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateReportRequest;
-import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsByPatientNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateAscResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateDescResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdReportResponse;
+import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.SuccessDataResult;
 import com.project.LaboratoryReportApp.dataAccess.abstracts.ReportDao;
 import com.project.LaboratoryReportApp.entities.concretes.Report;
 
@@ -32,27 +35,44 @@ public class ReportManager implements ReportService{
 	}
 	
 	@Override
-	public List<GetAllReportsResponse> getAll() {
-		List<Report> reports = reportDao.findAll();
-		List<GetAllReportsResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsResponse.class)).collect(Collectors.toList());
+	public DataResult<List<GetAllReportsResponse>> getAll() {
+		try {
+			List<Report> reports = reportDao.findAll();
+			List<GetAllReportsResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllReportsResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllReportsResponse>>(e.getMessage());
+		}
 		
-		return reportResponse;
 	}
 
 	@Override
-	public GetByIdReportResponse getById(int reportId) {
-		Report report = this.reportDao.findById(reportId).orElseThrow();
-		GetByIdReportResponse reportResponse = this.modelMapperService.forResponse().map(report, GetByIdReportResponse.class);
-		return reportResponse;
+	public DataResult<GetByIdReportResponse> getById(int reportId) {
+		try {
+			Report report = this.reportDao.findById(reportId).orElseThrow();
+			GetByIdReportResponse reportResponse = this.modelMapperService.forResponse().map(report, GetByIdReportResponse.class);
+			
+			return new SuccessDataResult<GetByIdReportResponse>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<GetByIdReportResponse>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public CreateReportRequest add(CreateReportRequest reportRequest) {
-		Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
-		Report savedReport = this.reportDao.save(report);
+	public DataResult<CreateReportRequest> add(CreateReportRequest reportRequest) {
+		try {
+			Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
+			Report savedReport = this.reportDao.save(report);
+			
+			CreateReportRequest savedReportRequest = this.modelMapperService.forRequest().map(savedReport, CreateReportRequest.class);
+			
+			return new SuccessDataResult<CreateReportRequest>(savedReportRequest, "Successfully added!");
+		} catch (Exception e) {
+			return new ErrorDataResult<CreateReportRequest>(e.getMessage());
+		}
 		
-		CreateReportRequest savedReportRequest = this.modelMapperService.forRequest().map(savedReport, CreateReportRequest.class);
-		return savedReportRequest;
 	}
 
 	@Override
@@ -61,38 +81,66 @@ public class ReportManager implements ReportService{
 	}
 
 	@Override
-	public UpdateReportRequest update(UpdateReportRequest reportRequest) {
-		Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
-		this.reportDao.save(report);
-		return reportRequest;
+	public DataResult<UpdateReportRequest> update(UpdateReportRequest reportRequest) {
+		try {
+			Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
+			this.reportDao.save(report);
+			
+			return new SuccessDataResult<UpdateReportRequest>(reportRequest, "Successfully updated!");
+		} catch (Exception e) {
+			return new ErrorDataResult<UpdateReportRequest>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public List<GetAllReportsByPatientNameOrSurnameResponse> getAllByPatientNameOrSurname(String patientName, String patientSurname) {
-		List<Report> reports = this.reportDao.findAllByPatientNameIgnoreCaseOrPatientSurnameIgnoreCase(patientName, patientSurname);
-		List<GetAllReportsByPatientNameOrSurnameResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsByPatientNameOrSurnameResponse.class)).collect(Collectors.toList());
-		return reportResponse;
+	public DataResult<List<GetAllReportsByPatientNameOrSurnameResponse>> getAllByPatientNameOrSurname(String patientName, String patientSurname) {
+		try {
+			List<Report> reports = this.reportDao.findAllByPatientNameIgnoreCaseOrPatientSurnameIgnoreCase(patientName, patientSurname);
+			List<GetAllReportsByPatientNameOrSurnameResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsByPatientNameOrSurnameResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllReportsByPatientNameOrSurnameResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllReportsByPatientNameOrSurnameResponse>>(e.getMessage());
+		}
 	}
 
 	@Override
-	public List<GetByPatientIdentityNumberReportResponse> getAllByPatientIdentityNumber(String identityNumber) {
-		List<Report> reports = this.reportDao.findAllByPatientIdentityNumberIgnoreCase(identityNumber);
-		List<GetByPatientIdentityNumberReportResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetByPatientIdentityNumberReportResponse.class)).collect(Collectors.toList());
-		return reportResponse;
+	public DataResult<List<GetByPatientIdentityNumberReportResponse>> getAllByPatientIdentityNumber(String identityNumber) {
+		try {
+			List<Report> reports = this.reportDao.findAllByPatientIdentityNumberIgnoreCase(identityNumber);
+			List<GetByPatientIdentityNumberReportResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetByPatientIdentityNumberReportResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetByPatientIdentityNumberReportResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetByPatientIdentityNumberReportResponse>>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public List<GetAllReportsReportDateDescResponse> getAllReportDateDesc() {
-		List<Report> reports = this.reportDao.findByOrderByReportDateDesc();
-		List<GetAllReportsReportDateDescResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateDescResponse.class)).collect(Collectors.toList());
-		return reportResponse;
+	public DataResult<List<GetAllReportsReportDateDescResponse>> getAllReportDateDesc() {
+		try {
+			List<Report> reports = this.reportDao.findByOrderByReportDateDesc();
+			List<GetAllReportsReportDateDescResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateDescResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllReportsReportDateDescResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllReportsReportDateDescResponse>>(e.getMessage());
+		}
 	}
 
 	@Override
-	public List<GetAllReportsReportDateAscResponse> getAllReportDateAsc() {
-		List<Report> reports = this.reportDao.findByOrderByReportDateAsc();
-		List<GetAllReportsReportDateAscResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateAscResponse.class)).collect(Collectors.toList());
-		return reportResponse;
+	public DataResult<List<GetAllReportsReportDateAscResponse>> getAllReportDateAsc() {
+		try {
+			List<Report> reports = this.reportDao.findByOrderByReportDateAsc();
+			List<GetAllReportsReportDateAscResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateAscResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllReportsReportDateAscResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllReportsReportDateAscResponse>>(e.getMessage());
+		}
+		
 	}
 
 }

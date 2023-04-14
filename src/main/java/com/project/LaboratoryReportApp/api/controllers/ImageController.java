@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.LaboratoryReportApp.business.abstracts.ImageService;
 import com.project.LaboratoryReportApp.business.responses.GetAllImagesResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdImageResponse;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.SuccessDataResult;
 
 @CrossOrigin
 @RestController
@@ -31,24 +33,24 @@ public class ImageController {
 	}
 	
 	@GetMapping("/getAll")
-	public List<GetAllImagesResponse> getAll(){
+	public DataResult<List<GetAllImagesResponse>> getAll(){
 		return this.imageService.getAll();
 	}
 	
 	@GetMapping("/getById/{image_id}")
-	public GetByIdImageResponse getById(@PathVariable("image_id") int id) {
+	public DataResult<GetByIdImageResponse> getById(@PathVariable("image_id") int id) {
 		return this.imageService.getById(id);
 	}
 	
 	@PostMapping(value= "/add/{report_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String add(@RequestBody MultipartFile image, @PathVariable("report_id") int reportId) {
+	public DataResult<String> add(@RequestBody MultipartFile image, @PathVariable("report_id") int reportId) {
 	    try {
     		this.imageService.add(image, reportId);
 	    } 
 	    catch (Exception e) {
 	    }
 	    
-	    return StringUtils.cleanPath(image.getOriginalFilename());
+	    return new SuccessDataResult<String>(StringUtils.cleanPath(image.getOriginalFilename()), " başarıyla eklendi.");
 	}
 	
 	@PostMapping("/delete/{image_id}")

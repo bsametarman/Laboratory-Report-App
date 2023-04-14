@@ -17,6 +17,7 @@ import com.project.LaboratoryReportApp.business.abstracts.ReportService;
 import com.project.LaboratoryReportApp.business.requests.CreateReportRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateReportRequest;
 import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsByPatientNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateAscResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateDescResponse;
@@ -36,37 +37,37 @@ public class ReportController {
 	}
 	
 	@GetMapping("/getAll")
-	public List<GetAllReportsResponse> getAll() {
+	public DataResult<List<GetAllReportsResponse>> getAll() {
 		return reportService.getAll();
 	}
 	
 	@GetMapping("/getAllReportDateDesc")
-	public List<GetAllReportsReportDateDescResponse> getAllReportDateDesc() {
+	public DataResult<List<GetAllReportsReportDateDescResponse>> getAllReportDateDesc() {
 		return reportService.getAllReportDateDesc();
 	}
 	
 	@GetMapping("/getAllReportDateAsc")
-	public List<GetAllReportsReportDateAscResponse> getAllReportDateAsc() {
+	public DataResult<List<GetAllReportsReportDateAscResponse>> getAllReportDateAsc() {
 		return reportService.getAllReportDateAsc();
 	}
 	
 	@GetMapping("/getById/{report_id}")
-	public GetByIdReportResponse getById(@PathVariable("report_id") int reportId) {
+	public DataResult<GetByIdReportResponse> getById(@PathVariable("report_id") int reportId) {
 		return reportService.getById(reportId);
 	}
 	
 	@GetMapping("/getByNameOrSurname/{patient_name}/{patient_surname}")
-	public List<GetAllReportsByPatientNameOrSurnameResponse> getByNameOrSurname(@PathVariable("patient_name") String patientName, @PathVariable("patient_surname") String patientSurname) {
+	public DataResult<List<GetAllReportsByPatientNameOrSurnameResponse>> getByNameOrSurname(@PathVariable("patient_name") String patientName, @PathVariable("patient_surname") String patientSurname) {
 		return reportService.getAllByPatientNameOrSurname(patientName, patientSurname);
 	}
 	
 	@GetMapping("/getByIdentityNumber/{identity_number}")
-	public List<GetByPatientIdentityNumberReportResponse> getByIdentityNumber(@PathVariable("identity_number") String identityNumber) {
+	public DataResult<List<GetByPatientIdentityNumberReportResponse>> getByIdentityNumber(@PathVariable("identity_number") String identityNumber) {
 		return reportService.getAllByPatientIdentityNumber(identityNumber);
 	}
 	
 	@PostMapping("/add")
-	public CreateReportRequest add(@RequestBody CreateReportRequest report) {
+	public DataResult<CreateReportRequest> add(@RequestBody CreateReportRequest report) {
 		return reportService.add(report);
 	}
 	
@@ -76,7 +77,7 @@ public class ReportController {
 	}
 	
 	@PutMapping("/update")
-	public UpdateReportRequest update(@RequestBody UpdateReportRequest report) {
+	public DataResult<UpdateReportRequest> update(@RequestBody UpdateReportRequest report) {
 		return reportService.update(report);
 	}
 }

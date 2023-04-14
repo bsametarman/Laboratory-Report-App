@@ -21,6 +21,7 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdent
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 
 @CrossOrigin
 @RestController
@@ -36,32 +37,32 @@ public class LaborantController {
 	}
 	
 	@GetMapping("/getAll")
-	public List<GetAllLaborantsResponse> getAll() {
+	public DataResult<List<GetAllLaborantsResponse>> getAll() {
 		return laborantService.getAll();
 	}
 	
 	@GetMapping("/getById/{laborantId}")
-	public GetByIdLaborantResponse getById(@PathVariable("laborantId") int laborantId) {
+	public DataResult<GetByIdLaborantResponse> getById(@PathVariable("laborantId") int laborantId) {
 		return laborantService.getById(laborantId);
 	}
 	
 	@GetMapping("/getByNameOrSurname/{name}/{surname}")
-	public List<GetAllLaborantsByNameOrSurnameResponse> getByNameOrSurname(@PathVariable("name") String name, @PathVariable("surname") String surname) {
+	public DataResult<List<GetAllLaborantsByNameOrSurnameResponse>> getByNameOrSurname(@PathVariable("name") String name, @PathVariable("surname") String surname) {
 		return laborantService.getAllByNameOrSurname(name, surname);
 	}
 	
 	@GetMapping("/getByHostpitalIdentityNumber/{hospital_identity_number}")
-	public List<GetAllLaborantsByHospitalIdentityNumberResponse> getByHostpitalIdentityNumber(@PathVariable("hospital_identity_number") String hospitalIdentityNumber) {
+	public DataResult<List<GetAllLaborantsByHospitalIdentityNumberResponse>> getByHostpitalIdentityNumber(@PathVariable("hospital_identity_number") String hospitalIdentityNumber) {
 		return laborantService.getAllByHospitalIdentityNumber(hospitalIdentityNumber);
 	}
 	
 	@GetMapping("/getByLaborantIdentityNumber/{laborant_identity_number}")
-	public List<GetAllLaborantsByIdentityNumberResponse> getByLaborantIdentityNumber(@PathVariable("laborant_identity_number") String laborantIdentityNumber) {
+	public DataResult<List<GetAllLaborantsByIdentityNumberResponse>> getByLaborantIdentityNumber(@PathVariable("laborant_identity_number") String laborantIdentityNumber) {
 		return laborantService.getAllByLaborantIdentityNumber(laborantIdentityNumber);
 	}
 	
 	@PostMapping("/add")
-	public CreateLaborantRequest add(@RequestBody CreateLaborantRequest laborant) {
+	public DataResult<CreateLaborantRequest> add(@RequestBody CreateLaborantRequest laborant) {
 		return laborantService.add(laborant);
 	}
 	
@@ -71,7 +72,7 @@ public class LaborantController {
 	}
 	
 	@PutMapping("/update")
-	public UpdateLaborantRequest update(@RequestBody UpdateLaborantRequest laborant) {
+	public DataResult<UpdateLaborantRequest> update(@RequestBody UpdateLaborantRequest laborant) {
 		return laborantService.update(laborant);
 	}
 	

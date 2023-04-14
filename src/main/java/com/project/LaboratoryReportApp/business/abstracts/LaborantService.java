@@ -9,14 +9,15 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdent
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 
 public interface LaborantService {
-	List<GetAllLaborantsResponse> getAll();
-	GetByIdLaborantResponse getById(int laborantId);
-	CreateLaborantRequest add(CreateLaborantRequest laborantRequest);
+	DataResult<List<GetAllLaborantsResponse>> getAll();
+	DataResult<GetByIdLaborantResponse> getById(int laborantId);
+	DataResult<CreateLaborantRequest> add(CreateLaborantRequest laborantRequest);
 	void delete(int laborantId);
-	UpdateLaborantRequest update(UpdateLaborantRequest laborantRequest);
-	List<GetAllLaborantsByNameOrSurnameResponse> getAllByNameOrSurname(String name, String surname);
-	List<GetAllLaborantsByHospitalIdentityNumberResponse> getAllByHospitalIdentityNumber(String hospitalIdentityNumber);
-	List<GetAllLaborantsByIdentityNumberResponse> getAllByLaborantIdentityNumber(String laborantIdentityNumber);
+	DataResult<UpdateLaborantRequest> update(UpdateLaborantRequest laborantRequest);
+	DataResult<List<GetAllLaborantsByNameOrSurnameResponse>> getAllByNameOrSurname(String name, String surname);
+	DataResult<List<GetAllLaborantsByHospitalIdentityNumberResponse>> getAllByHospitalIdentityNumber(String hospitalIdentityNumber);
+	DataResult<List<GetAllLaborantsByIdentityNumberResponse>> getAllByLaborantIdentityNumber(String laborantIdentityNumber);
 }

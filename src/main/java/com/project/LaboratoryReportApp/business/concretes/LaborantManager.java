@@ -15,6 +15,9 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameO
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.SuccessDataResult;
 import com.project.LaboratoryReportApp.dataAccess.abstracts.LaborantDao;
 import com.project.LaboratoryReportApp.entities.concretes.Laborant;
 
@@ -31,26 +34,45 @@ public class LaborantManager implements LaborantService{
 	}
 	
 	@Override
-	public List<GetAllLaborantsResponse> getAll() {
-		List<Laborant> laborants = laborantDao.findAll();
-		List<GetAllLaborantsResponse> laborantsResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsResponse.class)).collect(Collectors.toList());
+	public DataResult<List<GetAllLaborantsResponse>> getAll() {
+		try {
+			List<Laborant> laborants = laborantDao.findAll();
+			List<GetAllLaborantsResponse> laborantsResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllLaborantsResponse>>(laborantsResponse, "Successfully listed!");
+			
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllLaborantsResponse>>(e.getMessage());
+		}
 		
-		return laborantsResponse;
 	}
 
 	@Override
-	public GetByIdLaborantResponse getById(int laborantId) {
-		Laborant laborant = laborantDao.findById(laborantId).orElseThrow();
-		GetByIdLaborantResponse laborantResponse = this.modelMapperService.forResponse().map(laborant, GetByIdLaborantResponse.class);
+	public DataResult<GetByIdLaborantResponse> getById(int laborantId) {
+		try {
+			Laborant laborant = laborantDao.findById(laborantId).orElseThrow();
+			GetByIdLaborantResponse laborantResponse = this.modelMapperService.forResponse().map(laborant, GetByIdLaborantResponse.class);
+			
+			return new SuccessDataResult<GetByIdLaborantResponse>(laborantResponse, "Successfully listed!");
+			
+		} catch (Exception e) {
+			return new ErrorDataResult<GetByIdLaborantResponse>(e.getMessage());
+		}
 		
-		return laborantResponse;
 	}
 
 	@Override
-	public CreateLaborantRequest add(CreateLaborantRequest laborantRequest) {
-		Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
-		this.laborantDao.save(laborant);
-		return laborantRequest;
+	public DataResult<CreateLaborantRequest> add(CreateLaborantRequest laborantRequest) {
+		try {
+			Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
+			this.laborantDao.save(laborant);
+			
+			return new SuccessDataResult<CreateLaborantRequest>(laborantRequest, "Successfully added!");
+			
+		} catch (Exception e) {
+			return new ErrorDataResult<CreateLaborantRequest>(e.getMessage());
+		}
+		
 	}
 
 	@Override
@@ -59,33 +81,61 @@ public class LaborantManager implements LaborantService{
 	}
 
 	@Override
-	public UpdateLaborantRequest update(UpdateLaborantRequest laborantRequest) {
-		Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
-		this.laborantDao.save(laborant);
-		return laborantRequest;
+	public DataResult<UpdateLaborantRequest> update(UpdateLaborantRequest laborantRequest) {
+		try {
+			Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
+			this.laborantDao.save(laborant);
+			
+			return new SuccessDataResult<UpdateLaborantRequest>(laborantRequest, "Successfully updated!");
+			
+		} catch (Exception e) {
+			return new ErrorDataResult<UpdateLaborantRequest>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public List<GetAllLaborantsByNameOrSurnameResponse> getAllByNameOrSurname(String name, String surname) {
-		List<Laborant> laborants = this.laborantDao.findAllByLaborantNameIgnoreCaseOrLaborantSurnameIgnoreCase(name, surname);
-		List<GetAllLaborantsByNameOrSurnameResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByNameOrSurnameResponse.class)).collect(Collectors.toList());
-		return laborantResponse;
+	public DataResult<List<GetAllLaborantsByNameOrSurnameResponse>> getAllByNameOrSurname(String name, String surname) {
+		try {
+			List<Laborant> laborants = this.laborantDao.findAllByLaborantNameIgnoreCaseOrLaborantSurnameIgnoreCase(name, surname);
+			List<GetAllLaborantsByNameOrSurnameResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByNameOrSurnameResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllLaborantsByNameOrSurnameResponse>>(laborantResponse, "Successfully listed!");
+			
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllLaborantsByNameOrSurnameResponse>>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public List<GetAllLaborantsByHospitalIdentityNumberResponse> getAllByHospitalIdentityNumber(
+	public DataResult<List<GetAllLaborantsByHospitalIdentityNumberResponse>> getAllByHospitalIdentityNumber(
 			String hospitalIdentityNumber) {
-		List<Laborant> laborants = this.laborantDao.findAllByHospitalIdentityNumberIgnoreCase(hospitalIdentityNumber);
-		List<GetAllLaborantsByHospitalIdentityNumberResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByHospitalIdentityNumberResponse.class)).collect(Collectors.toList());
-		return laborantResponse;
+		try {
+			List<Laborant> laborants = this.laborantDao.findAllByHospitalIdentityNumberIgnoreCase(hospitalIdentityNumber);
+			List<GetAllLaborantsByHospitalIdentityNumberResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByHospitalIdentityNumberResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllLaborantsByHospitalIdentityNumberResponse>>(laborantResponse, "Successfully listed!");
+		
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllLaborantsByHospitalIdentityNumberResponse>>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public List<GetAllLaborantsByIdentityNumberResponse> getAllByLaborantIdentityNumber(
+	public DataResult<List<GetAllLaborantsByIdentityNumberResponse>> getAllByLaborantIdentityNumber(
 			String laborantIdentityNumber) {
-		List<Laborant> laborants = this.laborantDao.findAllByLaborantIdentityNumberIgnoreCase(laborantIdentityNumber);
-		List<GetAllLaborantsByIdentityNumberResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByIdentityNumberResponse.class)).collect(Collectors.toList());
-		return laborantResponse;
+		try {
+			List<Laborant> laborants = this.laborantDao.findAllByLaborantIdentityNumberIgnoreCase(laborantIdentityNumber);
+			List<GetAllLaborantsByIdentityNumberResponse> laborantResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllLaborantsByIdentityNumberResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllLaborantsByIdentityNumberResponse>>(laborantResponse, "Successfully listed!");
+		
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllLaborantsByIdentityNumberResponse>>(e.getMessage());
+		}
+		
 	}
 
 }

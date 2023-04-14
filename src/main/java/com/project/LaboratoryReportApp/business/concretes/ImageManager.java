@@ -14,6 +14,9 @@ import com.project.LaboratoryReportApp.business.requests.CreateImageRequest;
 import com.project.LaboratoryReportApp.business.responses.GetAllImagesResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdImageResponse;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
+import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
+import com.project.LaboratoryReportApp.core.utilities.results.SuccessDataResult;
 import com.project.LaboratoryReportApp.dataAccess.abstracts.ImageDao;
 import com.project.LaboratoryReportApp.entities.concretes.Image;
 
@@ -30,17 +33,29 @@ public class ImageManager implements ImageService {
 	}
 	
 	@Override
-	public List<GetAllImagesResponse> getAll() {
-		List<Image> images = this.imageDao.findAll();
-		List<GetAllImagesResponse> imageResponse = images.stream().map(image -> this.modelMapperService.forResponse().map(image, GetAllImagesResponse.class)).collect(Collectors.toList());
-		return imageResponse;
+	public DataResult<List<GetAllImagesResponse>> getAll() {
+		try {
+			List<Image> images = this.imageDao.findAll();
+			List<GetAllImagesResponse> imageResponse = images.stream().map(image -> this.modelMapperService.forResponse().map(image, GetAllImagesResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllImagesResponse>>(imageResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllImagesResponse>>(e.getMessage());
+		}
+		
 	}
 
 	@Override
-	public GetByIdImageResponse getById(int id) {
-		Image image = this.imageDao.findById(id).orElseThrow();
-		GetByIdImageResponse imageResponse = this.modelMapperService.forResponse().map(image, GetByIdImageResponse.class);
-		return imageResponse;
+	public DataResult<GetByIdImageResponse> getById(int id) {
+		try {
+			Image image = this.imageDao.findById(id).orElseThrow();
+			GetByIdImageResponse imageResponse = this.modelMapperService.forResponse().map(image, GetByIdImageResponse.class);
+			
+			return new SuccessDataResult<GetByIdImageResponse>(imageResponse, "Successfully listed.");
+		} catch (Exception e) {
+			return new ErrorDataResult<GetByIdImageResponse>(e.getMessage());
+		}
+		
 	}
 
 	@Override
