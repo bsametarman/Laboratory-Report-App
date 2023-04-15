@@ -14,6 +14,8 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdent
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
+import com.project.LaboratoryReportApp.business.rules.LaborantBusinessRules;
+import com.project.LaboratoryReportApp.core.utilities.exceptions.BusinessException;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
 import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
@@ -26,11 +28,13 @@ public class LaborantManager implements LaborantService{
 	
 	private LaborantDao laborantDao;
 	private ModelMapperService modelMapperService;
+	private LaborantBusinessRules laborantBusinessRules;
 	
 	@Autowired
-	public LaborantManager(LaborantDao laborantDao, ModelMapperService modelMapperService) {
+	public LaborantManager(LaborantDao laborantDao, ModelMapperService modelMapperService, LaborantBusinessRules laborantBusinessRules) {
 		this.laborantDao = laborantDao;
 		this.modelMapperService = modelMapperService;
+		this.laborantBusinessRules = laborantBusinessRules;
 	}
 	
 	@Override
@@ -65,11 +69,14 @@ public class LaborantManager implements LaborantService{
 	public DataResult<CreateLaborantRequest> add(CreateLaborantRequest laborantRequest) {
 		try {
 			Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
+			this.laborantBusinessRules.checkIfLaborantNameAndSurnameExists(laborant.getLaborantName(), laborant.getLaborantSurname());
+			this.laborantBusinessRules.checkIfLaborantIdentityNumberExists(laborant.getLaborantIdentityNumber());
+			
 			this.laborantDao.save(laborant);
 			
 			return new SuccessDataResult<CreateLaborantRequest>(laborantRequest, "Successfully added!");
 			
-		} catch (Exception e) {
+		} catch (BusinessException e) {
 			return new ErrorDataResult<CreateLaborantRequest>(e.getMessage());
 		}
 		

@@ -1,6 +1,7 @@
 package com.project.LaboratoryReportApp.entities.concretes;
 
 import java.util.List;
+
 import com.project.LaboratoryReportApp.entities.abstracts.IEntity;
 
 import jakarta.persistence.Column;

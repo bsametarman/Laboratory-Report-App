@@ -15,6 +15,7 @@ import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDat
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdReportResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
+import com.project.LaboratoryReportApp.business.rules.ReportBusinessRules;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
 import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
@@ -27,11 +28,13 @@ public class ReportManager implements ReportService{
 
 	private ReportDao reportDao;
 	private ModelMapperService modelMapperService;
+	private ReportBusinessRules reportBusinessRules;
 	
 	@Autowired
-	public ReportManager(ReportDao reportDao, ModelMapperService modelMapperService) {
+	public ReportManager(ReportDao reportDao, ModelMapperService modelMapperService, ReportBusinessRules reportBusinessRules) {
 		this.reportDao = reportDao;
 		this.modelMapperService = modelMapperService;
+		this.reportBusinessRules = reportBusinessRules;
 	}
 	
 	@Override
@@ -64,6 +67,7 @@ public class ReportManager implements ReportService{
 	public DataResult<CreateReportRequest> add(CreateReportRequest reportRequest) {
 		try {
 			Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
+			this.reportBusinessRules.checkIfFileNoExists(report.getFileNo());
 			Report savedReport = this.reportDao.save(report);
 			
 			CreateReportRequest savedReportRequest = this.modelMapperService.forRequest().map(savedReport, CreateReportRequest.class);
