@@ -16,6 +16,7 @@ import com.project.LaboratoryReportApp.business.responses.GetAllReportsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdReportResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
 import com.project.LaboratoryReportApp.business.rules.ReportBusinessRules;
+import com.project.LaboratoryReportApp.business.rules.ReportValidationRules;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
 import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
@@ -29,12 +30,15 @@ public class ReportManager implements ReportService{
 	private ReportDao reportDao;
 	private ModelMapperService modelMapperService;
 	private ReportBusinessRules reportBusinessRules;
+	private ReportValidationRules reportValidationRules;
 	
 	@Autowired
-	public ReportManager(ReportDao reportDao, ModelMapperService modelMapperService, ReportBusinessRules reportBusinessRules) {
+	public ReportManager(ReportDao reportDao, ModelMapperService modelMapperService,
+			ReportBusinessRules reportBusinessRules, ReportValidationRules reportValidationRules) {
 		this.reportDao = reportDao;
 		this.modelMapperService = modelMapperService;
 		this.reportBusinessRules = reportBusinessRules;
+		this.reportValidationRules = reportValidationRules;
 	}
 	
 	@Override
@@ -65,17 +69,22 @@ public class ReportManager implements ReportService{
 
 	@Override
 	public DataResult<CreateReportRequest> add(CreateReportRequest reportRequest) {
-		try {
-			Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
-			this.reportBusinessRules.checkIfFileNoExists(report.getFileNo());
-			Report savedReport = this.reportDao.save(report);
-			
-			CreateReportRequest savedReportRequest = this.modelMapperService.forRequest().map(savedReport, CreateReportRequest.class);
-			
-			return new SuccessDataResult<CreateReportRequest>(savedReportRequest, "Successfully added!");
-		} catch (Exception e) {
-			return new ErrorDataResult<CreateReportRequest>(e.getMessage());
-		}
+		Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
+		
+		this.reportValidationRules.checkIfFileNoIsValid(report.getFileNo());
+		this.reportValidationRules.checkIfPatientNameIsValid(report.getPatientName());
+		this.reportValidationRules.checkIfPatientSurnameIsValid(report.getPatientSurname());
+		this.reportValidationRules.checkIfPatientIdentityNumberIsValid(report.getPatientIdentityNumber());
+		this.reportValidationRules.checkIfDiagnosticTitleIsValid(report.getDiagnosticTitle());
+		this.reportValidationRules.checkIfDiagnosticDetailIsValid(report.getDiagnosticDetail());
+		
+		this.reportBusinessRules.checkIfFileNoExists(report.getFileNo());
+		
+		Report savedReport = this.reportDao.save(report);
+		
+		CreateReportRequest savedReportRequest = this.modelMapperService.forRequest().map(savedReport, CreateReportRequest.class);
+		
+		return new SuccessDataResult<CreateReportRequest>(savedReportRequest, "Successfully added!");
 		
 	}
 

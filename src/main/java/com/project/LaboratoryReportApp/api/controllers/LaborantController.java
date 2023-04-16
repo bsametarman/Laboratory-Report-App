@@ -25,8 +25,6 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsRespons
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 
-import jakarta.validation.Valid;
-
 @CrossOrigin
 @RestController
 @RequestMapping("/api/laborants")

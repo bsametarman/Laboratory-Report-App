@@ -15,7 +15,7 @@ import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameO
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetByIdLaborantResponse;
 import com.project.LaboratoryReportApp.business.rules.LaborantBusinessRules;
-import com.project.LaboratoryReportApp.core.utilities.exceptions.BusinessException;
+import com.project.LaboratoryReportApp.business.rules.LaborantValidationRules;
 import com.project.LaboratoryReportApp.core.utilities.mappers.ModelMapperService;
 import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
 import com.project.LaboratoryReportApp.core.utilities.results.ErrorDataResult;
@@ -29,12 +29,15 @@ public class LaborantManager implements LaborantService{
 	private LaborantDao laborantDao;
 	private ModelMapperService modelMapperService;
 	private LaborantBusinessRules laborantBusinessRules;
+	private LaborantValidationRules laborantValidationRules;
 	
 	@Autowired
-	public LaborantManager(LaborantDao laborantDao, ModelMapperService modelMapperService, LaborantBusinessRules laborantBusinessRules) {
+	public LaborantManager(LaborantDao laborantDao, ModelMapperService modelMapperService,
+			LaborantBusinessRules laborantBusinessRules, LaborantValidationRules laborantValidationRules) {
 		this.laborantDao = laborantDao;
 		this.modelMapperService = modelMapperService;
 		this.laborantBusinessRules = laborantBusinessRules;
+		this.laborantValidationRules = laborantValidationRules;
 	}
 	
 	@Override
@@ -67,18 +70,21 @@ public class LaborantManager implements LaborantService{
 
 	@Override
 	public DataResult<CreateLaborantRequest> add(CreateLaborantRequest laborantRequest) {
-		try {
-			Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
-			this.laborantBusinessRules.checkIfLaborantNameAndSurnameExists(laborant.getLaborantName(), laborant.getLaborantSurname());
-			this.laborantBusinessRules.checkIfLaborantIdentityNumberExists(laborant.getLaborantIdentityNumber());
-			
-			this.laborantDao.save(laborant);
-			
-			return new SuccessDataResult<CreateLaborantRequest>(laborantRequest, "Successfully added!");
-			
-		} catch (BusinessException e) {
-			return new ErrorDataResult<CreateLaborantRequest>(e.getMessage());
-		}
+		Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
+		
+		this.laborantValidationRules.checkIfLaborantNameIsValid(laborant.getLaborantName());
+		this.laborantValidationRules.checkIfLaborantSurnameIsValid(laborant.getLaborantSurname());
+		this.laborantValidationRules.checkIfLaborantIdentityNumberIsValid(laborant.getLaborantIdentityNumber());
+		this.laborantValidationRules.checkIfLaborantHospitalIdentityNumberIsValid(laborant.getHospitalIdentityNumber());
+		this.laborantValidationRules.checkIfLaborantAddressIsValid(laborant.getAddress());
+		this.laborantValidationRules.checkIfLaborantPhoneNumberIsValid(laborant.getPhoneNumber());
+		
+		this.laborantBusinessRules.checkIfLaborantNameAndSurnameExists(laborant.getLaborantName(), laborant.getLaborantSurname());
+		this.laborantBusinessRules.checkIfLaborantIdentityNumberExists(laborant.getLaborantIdentityNumber());
+		
+		this.laborantDao.save(laborant);
+		
+		return new SuccessDataResult<CreateLaborantRequest>(laborantRequest, "Successfully added!");
 		
 	}
 
