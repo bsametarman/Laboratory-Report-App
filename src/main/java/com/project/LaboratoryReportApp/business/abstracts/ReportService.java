@@ -16,6 +16,8 @@ import com.project.LaboratoryReportApp.business.responses.GetByIdReportResponse;
 public interface ReportService {
 	DataResult<List<GetAllReportsResponse>> getAll();
 	DataResult<List<GetAllActiveReportsResponse>> getAllActiveReports();
+	DataResult<List<GetAllReportsReportDateDescResponse>> getAllActiveReportsDateDesc();
+	DataResult<List<GetAllReportsReportDateAscResponse>> getAllActiveReportsDateAsc();
 	DataResult<GetByIdReportResponse> getById(int reportId);
 	DataResult<CreateReportRequest> add(CreateReportRequest report);
 	void delete(int reportId);

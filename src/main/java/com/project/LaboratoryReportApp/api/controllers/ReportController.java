@@ -52,6 +52,16 @@ public class ReportController {
 		return reportService.getAllReportDateAsc();
 	}
 	
+	@GetMapping("/getAllActiveReportsDateDesc")
+	public DataResult<List<GetAllReportsReportDateDescResponse>> getAllActiveReportsDateDesc() {
+		return reportService.getAllActiveReportsDateDesc();
+	}
+	
+	@GetMapping("/getAllActiveReportsDateAsc")
+	public DataResult<List<GetAllReportsReportDateAscResponse>> getAllActiveReportsDateAsc() {
+		return reportService.getAllActiveReportsDateAsc();
+	}
+	
 	@GetMapping("/getAllActiveReports")
 	public DataResult<List<GetAllActiveReportsResponse>> getAllActiveReports() {
 		return reportService.getAllActiveReports();

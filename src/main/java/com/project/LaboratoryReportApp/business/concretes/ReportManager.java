@@ -159,6 +159,31 @@ public class ReportManager implements ReportService{
 		}
 		
 	}
+	
+	@Override
+	public DataResult<List<GetAllReportsReportDateDescResponse>> getAllActiveReportsDateDesc() {
+		try {
+			List<Report> reports = this.reportDao.findAllByIsActiveOrderByReportDateDesc(true);
+			List<GetAllReportsReportDateDescResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateDescResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllReportsReportDateDescResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllReportsReportDateDescResponse>>(e.getMessage());
+		}
+	}
+
+	@Override
+	public DataResult<List<GetAllReportsReportDateAscResponse>> getAllActiveReportsDateAsc() {
+		try {
+			List<Report> reports = this.reportDao.findAllByIsActiveOrderByReportDateAsc(true);
+			List<GetAllReportsReportDateAscResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllReportsReportDateAscResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllReportsReportDateAscResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllReportsReportDateAscResponse>>(e.getMessage());
+		}
+		
+	}
 
 	@Override
 	public DataResult<List<GetAllActiveReportsResponse>> getAllActiveReports() {
