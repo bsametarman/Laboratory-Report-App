@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.project.LaboratoryReportApp.business.abstracts.LaborantService;
 import com.project.LaboratoryReportApp.business.requests.CreateLaborantRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateLaborantRequest;
+import com.project.LaboratoryReportApp.business.responses.GetAllActiveLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByHospitalIdentityNumberResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdentityNumberResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
@@ -82,6 +83,8 @@ public class LaborantManager implements LaborantService{
 		this.laborantBusinessRules.checkIfLaborantNameAndSurnameExists(laborant.getLaborantName(), laborant.getLaborantSurname());
 		this.laborantBusinessRules.checkIfLaborantIdentityNumberExists(laborant.getLaborantIdentityNumber());
 		
+		laborant.setActive(true);
+		
 		this.laborantDao.save(laborant);
 		
 		return new SuccessDataResult<CreateLaborantRequest>(laborantRequest, "Successfully added!");
@@ -97,6 +100,7 @@ public class LaborantManager implements LaborantService{
 	public DataResult<UpdateLaborantRequest> update(UpdateLaborantRequest laborantRequest) {
 		try {
 			Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
+			laborant.setActive(true);
 			this.laborantDao.save(laborant);
 			
 			return new SuccessDataResult<UpdateLaborantRequest>(laborantRequest, "Successfully updated!");
@@ -149,6 +153,32 @@ public class LaborantManager implements LaborantService{
 			return new ErrorDataResult<List<GetAllLaborantsByIdentityNumberResponse>>(e.getMessage());
 		}
 		
+	}
+
+	@Override
+	public DataResult<List<GetAllActiveLaborantsResponse>> getAllActiveLaborants() {
+		try {
+			List<Laborant> laborants = laborantDao.findAllByIsActive(true);
+			List<GetAllActiveLaborantsResponse> laborantsResponse = laborants.stream().map(laborant -> this.modelMapperService.forResponse().map(laborant, GetAllActiveLaborantsResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllActiveLaborantsResponse>>(laborantsResponse, "Successfully listed!");
+			
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllActiveLaborantsResponse>>(e.getMessage());
+		}
+	}
+
+	@Override
+	public void changeActiveState(int laborantId) {
+		try {
+			Laborant laborant = this.laborantDao.findById(laborantId).orElseThrow();
+			boolean activeState = laborant.isActive() == true ? false : true;
+			laborant.setActive(activeState);
+			this.laborantDao.save(laborant);
+			
+		} catch (Exception e) {
+			
+		}
 	}
 
 }

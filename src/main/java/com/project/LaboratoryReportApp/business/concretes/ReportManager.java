@@ -100,6 +100,7 @@ public class ReportManager implements ReportService{
 	public DataResult<UpdateReportRequest> update(UpdateReportRequest reportRequest) {
 		try {
 			Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
+			report.setActive(true);
 			this.reportDao.save(report);
 			
 			return new SuccessDataResult<UpdateReportRequest>(reportRequest, "Successfully updated!");

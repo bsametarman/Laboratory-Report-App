@@ -10,6 +10,7 @@ public interface LaborantDao extends JpaRepository<Laborant, Integer>{
 	List<Laborant> findAllByLaborantNameIgnoreCaseOrLaborantSurnameIgnoreCase(String name, String surname);
 	List<Laborant> findAllByHospitalIdentityNumberIgnoreCase(String hospitalIdentityNumber);
 	List<Laborant> findAllByLaborantIdentityNumberIgnoreCase(String laborantIdentityNumber);
+	List<Laborant> findAllByIsActive(boolean isActive);
 	boolean existsByLaborantNameIgnoreCaseAndLaborantSurnameIgnoreCase(String name, String surname);
 	boolean existsByLaborantIdentityNumber(String identityNumber);
 }

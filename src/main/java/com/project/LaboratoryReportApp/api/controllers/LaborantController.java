@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.LaboratoryReportApp.business.abstracts.LaborantService;
 import com.project.LaboratoryReportApp.business.requests.CreateLaborantRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateLaborantRequest;
+import com.project.LaboratoryReportApp.business.responses.GetAllActiveLaborantsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByHospitalIdentityNumberResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByIdentityNumberResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllLaborantsByNameOrSurnameResponse;
@@ -41,6 +42,11 @@ public class LaborantController {
 	@GetMapping("/getAll")
 	public DataResult<List<GetAllLaborantsResponse>> getAll() {
 		return laborantService.getAll();
+	}
+	
+	@GetMapping("/getAllActiveLaborants")
+	public DataResult<List<GetAllActiveLaborantsResponse>> getAllActiveLaborants() {
+		return laborantService.getAllActiveLaborants();
 	}
 	
 	@GetMapping("/getById/{laborantId}")
@@ -67,6 +73,11 @@ public class LaborantController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public DataResult<CreateLaborantRequest> add(@RequestBody CreateLaborantRequest laborant) {
 		return laborantService.add(laborant);
+	}
+	
+	@PutMapping("/changeActiveState/{laborant_id}")
+	public void changeActiveState(@PathVariable("laborant_id") int laborantId) {
+		laborantService.changeActiveState(laborantId);
 	}
 	
 	@DeleteMapping("/delete/{laborant_id}")

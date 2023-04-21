@@ -48,4 +48,7 @@ public class Laborant implements IEntity{
 	@Column(name="phone_number")
 	private String phoneNumber;
 	
+	@Column(name="is_active")
+	private boolean isActive;
+	
 }
