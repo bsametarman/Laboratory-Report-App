@@ -18,6 +18,7 @@ import com.project.LaboratoryReportApp.business.requests.CreateReportRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateReportRequest;
 import com.project.LaboratoryReportApp.business.responses.GetByPatientIdentityNumberReportResponse;
 import com.project.LaboratoryReportApp.core.utilities.results.DataResult;
+import com.project.LaboratoryReportApp.business.responses.GetAllActiveReportsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsByPatientNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateAscResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateDescResponse;
@@ -51,6 +52,11 @@ public class ReportController {
 		return reportService.getAllReportDateAsc();
 	}
 	
+	@GetMapping("/getAllActiveReports")
+	public DataResult<List<GetAllActiveReportsResponse>> getAllActiveReports() {
+		return reportService.getAllActiveReports();
+	}
+	
 	@GetMapping("/getById/{report_id}")
 	public DataResult<GetByIdReportResponse> getById(@PathVariable("report_id") int reportId) {
 		return reportService.getById(reportId);
@@ -74,6 +80,11 @@ public class ReportController {
 	@DeleteMapping("/delete/{report_id}")
 	public void delete(@PathVariable("report_id") int reportId) {
 		reportService.delete(reportId);
+	}
+	
+	@PutMapping("/changeActiveState/{report_id}")
+	public void changeActiveState(@PathVariable("report_id") int reportId) {
+		reportService.changeActiveState(reportId);
 	}
 	
 	@PutMapping("/update")

@@ -33,7 +33,7 @@ public class ReportValidationRules {
 		if(surname == null) {
 			throw new MethodArgumentNotValidException("Surname cannot be null!");
 		}
-		else if(!StringUtils.isAnyBlank(surname)) {
+		else if(StringUtils.isAnyBlank(surname)) {
 			throw new MethodArgumentNotValidException("Surname cannot have spaces!");
 		}
 		else if(surname.length() <= 2 || surname.length() >= 25) {
@@ -57,8 +57,8 @@ public class ReportValidationRules {
 		if(diagnosticTitle == null) {
 			throw new MethodArgumentNotValidException("Diagnostic title cannot be null!");
 		}
-		else if(diagnosticTitle.length() < 10 || diagnosticTitle.length() > 50) {
-			throw new MethodArgumentNotValidException("Diagnostic title must be between 10 and 50 characters.");
+		else if(diagnosticTitle.length() < 5 || diagnosticTitle.length() > 50) {
+			throw new MethodArgumentNotValidException("Diagnostic title must be between 5 and 50 characters.");
 		}
 	}
 	

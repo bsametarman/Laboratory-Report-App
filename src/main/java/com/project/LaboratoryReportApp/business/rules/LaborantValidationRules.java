@@ -24,7 +24,7 @@ public class LaborantValidationRules {
 		if(surname == null) {
 			throw new MethodArgumentNotValidException("Surname cannot be null!");
 		}
-		else if(!StringUtils.isAnyBlank(surname)) {
+		else if(StringUtils.isAnyBlank(surname)) {
 			throw new MethodArgumentNotValidException("Surname cannot have spaces!");
 		}
 		else if(surname.length() < 2 || surname.length() > 25) {

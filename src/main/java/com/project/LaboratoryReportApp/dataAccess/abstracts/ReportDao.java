@@ -11,6 +11,7 @@ public interface ReportDao extends JpaRepository<Report, Integer>{
 	List<Report> findAllByPatientIdentityNumberIgnoreCase(String patientIdentityNumber);
 	List<Report> findByOrderByReportDateDesc();
 	List<Report> findByOrderByReportDateAsc();
+	List<Report> findAllByIsActive(boolean isActive);
 	//List<Report> findAllByLaborantNameIgnoreCaseOrLaborantSurnameIgnoreCase(String laborantName, String laborantSurname);
 	boolean existsByFileNo(String fileNo);
 }

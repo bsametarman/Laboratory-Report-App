@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.project.LaboratoryReportApp.business.abstracts.ReportService;
 import com.project.LaboratoryReportApp.business.requests.CreateReportRequest;
 import com.project.LaboratoryReportApp.business.requests.UpdateReportRequest;
+import com.project.LaboratoryReportApp.business.responses.GetAllActiveReportsResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsByPatientNameOrSurnameResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateAscResponse;
 import com.project.LaboratoryReportApp.business.responses.GetAllReportsReportDateDescResponse;
@@ -79,6 +80,8 @@ public class ReportManager implements ReportService{
 		this.reportValidationRules.checkIfDiagnosticDetailIsValid(report.getDiagnosticDetail());
 		
 		this.reportBusinessRules.checkIfFileNoExists(report.getFileNo());
+		
+		report.setActive(true);
 		
 		Report savedReport = this.reportDao.save(report);
 		
@@ -154,6 +157,31 @@ public class ReportManager implements ReportService{
 			return new ErrorDataResult<List<GetAllReportsReportDateAscResponse>>(e.getMessage());
 		}
 		
+	}
+
+	@Override
+	public DataResult<List<GetAllActiveReportsResponse>> getAllActiveReports() {
+		try {
+			List<Report> reports = reportDao.findAllByIsActive(true);
+			List<GetAllActiveReportsResponse> reportResponse = reports.stream().map(report -> this.modelMapperService.forResponse().map(report, GetAllActiveReportsResponse.class)).collect(Collectors.toList());
+			
+			return new SuccessDataResult<List<GetAllActiveReportsResponse>>(reportResponse, "Successfully listed!");
+		} catch (Exception e) {
+			return new ErrorDataResult<List<GetAllActiveReportsResponse>>(e.getMessage());
+		}
+	}
+
+	@Override
+	public void changeActiveState(int reportId) {
+		try {
+			Report report = this.reportDao.findById(reportId).orElseThrow();
+			boolean activeState = report.isActive() == true ? false : true;
+			report.setActive(activeState);
+			this.reportDao.save(report);
+			
+		} catch (Exception e) {
+			
+		}
 	}
 
 }

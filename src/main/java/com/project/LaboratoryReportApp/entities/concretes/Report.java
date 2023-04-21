@@ -51,6 +51,9 @@ public class Report implements IEntity{
 	@Column(name="report_date")
 	private Date reportDate;
 	
+	@Column(name="is_active")
+	private boolean isActive;
+	
 	@OneToMany(mappedBy="report")
 	private List<Image> images;
 	
