@@ -98,17 +98,20 @@ public class LaborantManager implements LaborantService{
 
 	@Override
 	public DataResult<UpdateLaborantRequest> update(UpdateLaborantRequest laborantRequest) {
-		try {
-			Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
-			laborant.setActive(true);
-			this.laborantDao.save(laborant);
-			
-			return new SuccessDataResult<UpdateLaborantRequest>(laborantRequest, "Successfully updated!");
-			
-		} catch (Exception e) {
-			return new ErrorDataResult<UpdateLaborantRequest>(e.getMessage());
-		}
+		Laborant laborant = this.modelMapperService.forRequest().map(laborantRequest, Laborant.class);
 		
+		this.laborantValidationRules.checkIfLaborantNameIsValid(laborant.getLaborantName());
+		this.laborantValidationRules.checkIfLaborantSurnameIsValid(laborant.getLaborantSurname());
+		this.laborantValidationRules.checkIfLaborantIdentityNumberIsValid(laborant.getLaborantIdentityNumber());
+		this.laborantValidationRules.checkIfLaborantHospitalIdentityNumberIsValid(laborant.getHospitalIdentityNumber());
+		this.laborantValidationRules.checkIfLaborantAddressIsValid(laborant.getAddress());
+		this.laborantValidationRules.checkIfLaborantPhoneNumberIsValid(laborant.getPhoneNumber());
+		
+		laborant.setActive(true);
+		
+		this.laborantDao.save(laborant);
+		
+		return new SuccessDataResult<UpdateLaborantRequest>(laborantRequest, "Successfully updated!");
 	}
 
 	@Override

@@ -98,15 +98,19 @@ public class ReportManager implements ReportService{
 
 	@Override
 	public DataResult<UpdateReportRequest> update(UpdateReportRequest reportRequest) {
-		try {
-			Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
-			report.setActive(true);
-			this.reportDao.save(report);
-			
-			return new SuccessDataResult<UpdateReportRequest>(reportRequest, "Successfully updated!");
-		} catch (Exception e) {
-			return new ErrorDataResult<UpdateReportRequest>(e.getMessage());
-		}
+		Report report = this.modelMapperService.forRequest().map(reportRequest, Report.class);
+		
+		this.reportValidationRules.checkIfFileNoIsValid(report.getFileNo());
+		this.reportValidationRules.checkIfPatientNameIsValid(report.getPatientName());
+		this.reportValidationRules.checkIfPatientSurnameIsValid(report.getPatientSurname());
+		this.reportValidationRules.checkIfPatientIdentityNumberIsValid(report.getPatientIdentityNumber());
+		this.reportValidationRules.checkIfDiagnosticTitleIsValid(report.getDiagnosticTitle());
+		this.reportValidationRules.checkIfDiagnosticDetailIsValid(report.getDiagnosticDetail());
+		
+		report.setActive(true);
+		this.reportDao.save(report);
+		
+		return new SuccessDataResult<UpdateReportRequest>(reportRequest, "Successfully updated!");
 		
 	}
 
